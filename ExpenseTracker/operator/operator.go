@@ -9,51 +9,32 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-// Describes each expense
+// Describes each expense.
 type Expense struct {
-	Id     int
+	ID     int
 	Date   time.Time
 	Desc   string
-	Amount int // Центы не будем считать, действительно))) Я лучше в рубли переведу - без копеек легче обойтись.... Не хочу переписывать...
+	Amount int
 }
 
-// Set of getters
-// func (e *expense) Id() int {
-// 	return e.id
-// }
-// func (e *expense) Amount() int {
-// 	return e.amount
-// }
-// func (e *expense) Date() time.Time {
-// 	return e.date
-// }
-// func (e *expense) Desc() string {
-// 	return e.desc
-// }
-
-// If provided data is valid - returns nil, else - returns error
+// If provided data is valid - returns nil, else - returns error.
 func ValidateData(description string, amount int) error {
-
 	if amount < 0 {
 		return errors.New("negative amount promoted")
 	}
-	// if amount > math.MaxInt {
-	// 	return errors.New("amount is too big")
-	//}
 	runes := []rune(description)
-	if len(runes) > 30 { // i do believe that u can describe your purchase in 30 symbols or less (да, пожадничали для красивого вывода)
+	if len(runes) > 30 {
 		return errors.New("your description is too long")
 	}
 
 	return nil
-
 }
 
-func CreateExpense(description string, amount int) Expense {
+func NewExpense(description string, amount int) Expense {
 	return Expense{0, time.Now(), description, amount}
 }
 
-// Shows list of available commands
+// Shows list of available commands.
 func Help() {
 	fmt.Println("Доступные команды: 1. add *Description* *amount* -- adds your expense")
 	fmt.Println("Доступные команды: 2. list -- shows list of your expenses")
@@ -69,7 +50,7 @@ func Help() {
 // WORKS ONLY WITH LOCAL DB!
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Returns a connection to local DB
+// Returns a connection to local DB.
 func NewConnectionToDB() (*pgx.Conn, error) {
 	conn, err := pgx.Connect(context.Background(), "postgres://postgres:Asdewq232113@localhost:5433/postgres")
 
@@ -79,7 +60,7 @@ func NewConnectionToDB() (*pgx.Conn, error) {
 	return conn, nil
 }
 
-// Checks that expense if provided id exists
+// Checks that expense if provided id exists.
 func ExpenseExists(conn *pgx.Conn, id int) (bool, error) {
 	var exists bool
 	err := conn.QueryRow(context.Background(),
@@ -87,8 +68,8 @@ func ExpenseExists(conn *pgx.Conn, id int) (bool, error) {
 	return exists, err
 }
 
-// Adds a promoted expense (need to validate)
-func AddExpensToDatabase(conn *pgx.Conn, e Expense) error {
+// Adds a promoted expense (need to validate).
+func CreateExpense(conn *pgx.Conn, e Expense) error {
 	query := `INSERT INTO public.Expenses (Date, Description, Amount) VALUES (@Date, @Description, @Amount)`
 
 	args := pgx.NamedArgs{
@@ -104,9 +85,8 @@ func AddExpensToDatabase(conn *pgx.Conn, e Expense) error {
 	return nil
 }
 
-// Returns an array of all expenses available
+// Returns an array of all expenses available.
 func GetAllExpensesFromDb(conn *pgx.Conn) ([]Expense, error) {
-
 	query := `SELECT * FROM public.Expenses`
 
 	rows, err := conn.Query(context.Background(), query)
@@ -121,7 +101,7 @@ func GetAllExpensesFromDb(conn *pgx.Conn) ([]Expense, error) {
 
 	for rows.Next() {
 		var exp Expense
-		err := rows.Scan(&exp.Id, &exp.Date, &exp.Desc, &exp.Amount)
+		err := rows.Scan(&exp.ID, &exp.Date, &exp.Desc, &exp.Amount)
 		if err != nil {
 			fmt.Println("Error fetching expense details")
 			return expenses, err
@@ -131,7 +111,7 @@ func GetAllExpensesFromDb(conn *pgx.Conn) ([]Expense, error) {
 	return expenses, nil
 }
 
-// Replaces expense with promoted id with new given expense
+// Replaces expense with promoted id with new given expense.
 func UpdateExpense(conn *pgx.Conn, id int, exp Expense) error {
 	query := `
 		UPDATE public.Expenses
@@ -153,9 +133,8 @@ func UpdateExpense(conn *pgx.Conn, id int, exp Expense) error {
 	return nil
 }
 
-// Deletes an expense with promoted id
+// Deletes an expense with promoted id.
 func DeleteExpense(conn *pgx.Conn, id int) error {
-
 	query := `
 	DELETE FROM public.Expenses WHERE id = @id`
 
@@ -171,7 +150,7 @@ func DeleteExpense(conn *pgx.Conn, id int) error {
 	return nil
 }
 
-// to help count sum of array
+// to help count sum of array.
 func sumOfArray(i []int) int {
 	summ := 0
 	for _, v := range i {
@@ -180,9 +159,8 @@ func sumOfArray(i []int) int {
 	return summ
 }
 
-// Returns an amount of all expenses
+// Returns an amount of all expenses.
 func Summary(conn *pgx.Conn) (int, error) {
-
 	query := `
 	SELECT e.Amount FROM public.Expenses as e
 	`
@@ -207,10 +185,9 @@ func Summary(conn *pgx.Conn) (int, error) {
 		amounts = append(amounts, amount)
 	}
 	return sumOfArray(amounts), nil
-
 }
 
-// Wipes out db (and resets id's too!)
+// Wipes out db (and resets id's too!).
 func ResetDatabase(conn *pgx.Conn) error {
 	_, err := conn.Exec(context.Background(),
 		`TRUNCATE TABLE public.Expenses RESTART IDENTITY`)
