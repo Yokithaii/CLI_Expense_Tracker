@@ -47,6 +47,4 @@ issues:
     - EXC0003 # test/Test ... consider calling this
     - EXC0004 # govet
     - EXC0005 # C-style breaks
-  exclude-dirs:
-    - api/auth/signer/v4asdk2
-    - api/auth/signer/v4sdk2
+

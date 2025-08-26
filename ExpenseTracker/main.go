@@ -47,24 +47,16 @@ func main() {
 
 func processCommand(fields []string, conn *pgx.Conn) error {
 	if len(fields) == 0 {
-		return fmt.Errorf("Вы ничего не ввели")
+		return fmt.Errorf("вы ничего не ввели")
 	}
 	cmd := fields[0]
 	switch cmd {
 	case "exit":
 		return fmt.Errorf("exit")
 	case "add":
-		err := addExpense(conn, fields)
-		if err != nil {
-			return err
-		}
-		fmt.Println("Expense added succesfully")
-		return nil
+		return addExpense(conn, fields)
 	case "list":
-		err := listExpenses(conn)
-		if err != nil {
-			return err
-		}
+		return listExpenses(conn)
 	case "summary":
 		err := summaryOfExpenses(conn)
 		if err != nil {
@@ -134,6 +126,7 @@ func addExpense(conn *pgx.Conn, fields []string) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("Expense added succesfully")
 	return nil
 }
 
