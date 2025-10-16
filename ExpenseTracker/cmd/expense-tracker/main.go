@@ -1,13 +1,14 @@
 package main
 
 import (
-	"ExpenseTracker/operator"
 	"bufio"
 	"context"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/Yokithaii/CLI_Expense_Tracker/internal/operator"
 
 	"github.com/jackc/pgx/v5"
 )
