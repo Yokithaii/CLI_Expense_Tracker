@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Yokithaii/CLI_Expense_Tracker_dev/internal/dataaccess"
-	"github.com/Yokithaii/CLI_Expense_Tracker_dev/internal/entities"
-	"github.com/Yokithaii/CLI_Expense_Tracker_dev/internal/services"
+	"github.com/Yokithaii/CLI_Expense_Tracker/internal/dataaccess"
+	"github.com/Yokithaii/CLI_Expense_Tracker/internal/entities"
+	"github.com/Yokithaii/CLI_Expense_Tracker/internal/services"
 )
 
 func main() {

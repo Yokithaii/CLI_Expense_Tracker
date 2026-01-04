@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Yokithaii/CLI_Expense_Tracker_dev/internal/dataaccess"
-	"github.com/Yokithaii/CLI_Expense_Tracker_dev/internal/entities"
+	"github.com/Yokithaii/CLI_Expense_Tracker/internal/dataaccess"
+	"github.com/Yokithaii/CLI_Expense_Tracker/internal/entities"
 )
 
 type ExpenseService struct {

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Yokithaii/CLI_Expense_Tracker_dev/internal/entities"
+	"github.com/Yokithaii/CLI_Expense_Tracker/internal/entities"
 	"github.com/jackc/pgx/v5"
 )
 
